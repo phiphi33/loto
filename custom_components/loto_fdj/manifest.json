@@ -1,0 +1,11 @@
+{
+  "domain": "loto_fdj",
+  "name": "Résultats Loto FDJ",
+  "version": "1.0.0",
+  "documentation": "https://github.com/votre-nom/loto-fdj",
+  "issue_tracker": "https://github.com/votre-nom/loto-fdj/issues",
+  "dependencies": [],
+  "codeowners": ["@votre-nom"],
+  "requirements": ["beautifulsoup4>=4.9.0"],
+  "iot_class": "cloud_polling"
+}
