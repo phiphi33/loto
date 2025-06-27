@@ -55,3 +55,70 @@ L'intégration crée automatiquement les capteurs suivants :
 ## Utilisation dans les cartes
 
 ### Carte entités simple
+
+type: entities
+title: Résultats Loto FDJ
+entities:
+
+    sensor.loto_resultat_complet
+
+    sensor.loto_date_tirage
+
+text
+
+### Carte personnalisée (boules visuelles)
+
+type: picture-elements
+image: /local/loto_background.png
+elements:
+
+    type: state-label
+    entity: sensor.loto_boule_1
+    style:
+    top: 50%
+    left: 15%
+
+text
+
+## Automatisations
+
+Exemple d'automatisation pour être notifié des nouveaux résultats :
+
+automation:
+
+    alias: "Notification résultats Loto"
+    trigger:
+
+        platform: state
+        entity_id: sensor.loto_resultat_complet
+        action:
+
+        service: notify.mobile_app
+        data:
+        title: "Nouveaux résultats Loto !"
+        message: "{{ states('sensor.loto_resultat_complet') }}"
+
+text
+
+## Développement
+
+Contributions bienvenues ! Pour contribuer :
+
+1. Fork ce dépôt
+2. Créez une branche feature (`git checkout -b feature/amelioration`)
+3. Committez vos changements (`git commit -am 'Ajout fonctionnalité'`)
+4. Push vers la branche (`git push origin feature/amelioration`)
+5. Créez une Pull Request
+
+## Support
+
+- [Issues GitHub](https://github.com/votre-nom/loto-fdj/issues)
+- [Forum Home Assistant](https://community.home-assistant.io/)
+
+## Licence
+
+Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+**Note :** Cette intégration utilise les données publiques du site FDJ. Elle n'est pas affiliée à la Française des Jeux.
