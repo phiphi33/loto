@@ -1,7 +1,7 @@
 # Loto FDJ - Intégration Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-[![GitHub release](https://img.shields.io/github/release/votre-nom/loto-fdj)](https://github.com/votre-nom/loto-fdj/releases)
+[![GitHub release](https://img.shields.io/github/release/phiphi33/loto)](https://github.com/phiphi33/loto/releases)
 
 Intégration Home Assistant pour afficher les résultats du Loto français (FDJ) directement dans votre tableau de bord.
 
@@ -26,7 +26,7 @@ Intégration Home Assistant pour afficher les résultats du Loto français (FDJ)
 
 ### Installation manuelle
 
-1. Téléchargez les fichiers depuis [Releases](https://github.com/votre-nom/loto-fdj/releases)
+1. Téléchargez les fichiers depuis [Releases](https://github.com/phiphi33/loto/releases)
 2. Copiez le dossier `loto_fdj` dans `custom_components/`
 3. Redémarrez Home Assistant
 
@@ -55,7 +55,6 @@ L'intégration crée automatiquement les capteurs suivants :
 ## Utilisation dans les cartes
 
 ### Carte entités simple
-
 type: entities
 title: Résultats Loto FDJ
 entities:
@@ -64,10 +63,7 @@ entities:
 
     sensor.loto_date_tirage
 
-text
-
 ### Carte personnalisée (boules visuelles)
-
 type: picture-elements
 image: /local/loto_background.png
 elements:
@@ -77,8 +73,6 @@ elements:
     style:
     top: 50%
     left: 15%
-
-text
 
 ## Automatisations
 
@@ -98,8 +92,6 @@ automation:
         title: "Nouveaux résultats Loto !"
         message: "{{ states('sensor.loto_resultat_complet') }}"
 
-text
-
 ## Développement
 
 Contributions bienvenues ! Pour contribuer :
@@ -112,7 +104,7 @@ Contributions bienvenues ! Pour contribuer :
 
 ## Support
 
-- [Issues GitHub](https://github.com/votre-nom/loto-fdj/issues)
+- [Issues GitHub](https://github.com/phiphi33/loto/issues)
 - [Forum Home Assistant](https://community.home-assistant.io/)
 
 ## Licence
@@ -122,3 +114,4 @@ Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
 ---
 
 **Note :** Cette intégration utilise les données publiques du site FDJ. Elle n'est pas affiliée à la Française des Jeux.
+
