@@ -5,7 +5,8 @@
   "documentation": "https://github.com/phiphi33/loto-fdj",
   "issue_tracker": "https://github.com/phiphi33/loto-fdj/issues",
   "dependencies": [],
-  "codeowners": ["@votre-nom"],
-  "requirements": ["beautifulsoup4>=4.9.0"],
-  "iot_class": "cloud_polling"
+  "codeowners": ["@phiphi33"],
+  "requirements": ["beautifulsoup4>=4.9.0", "aiohttp>=3.8.0"],
+  "iot_class": "cloud_polling",
+  "config_flow": true
 }
