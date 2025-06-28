@@ -5,6 +5,9 @@ import logging
 from typing import Any
 
 import voluptuous as vol
+import aiohttp
+from bs4 import BeautifulSoup
+
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
@@ -33,37 +36,49 @@ OPTIONS_SCHEMA = vol.Schema(
     }
 )
 
-
 async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Valide que nous pouvons nous connecter à FDJ."""
-    import aiohttp
-    from bs4 import BeautifulSoup
-    
     try:
+        # Utiliser l'URL qui fonctionne d'après nos tests
+        url = "https://www.fdj.fr/jeux-de-tirage/loto/resultats/mercredi-25-juin-2025"
+        
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                "https://www.fdj.fr/jeux-de-tirage/loto/resultats",
-                timeout=aiohttp.ClientTimeout(total=10)
+                url,
+                timeout=aiohttp.ClientTimeout(total=15),
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
             ) as response:
                 if response.status != 200:
+                    _LOGGER.error("HTTP Error: %s", response.status)
                     raise CannotConnect
                 
                 html = await response.text()
                 soup = BeautifulSoup(html, 'html.parser')
                 
-                # Vérification basique que la page contient les résultats
-                if not soup.select("#loto-results"):
+                # Vérifier qu'on peut extraire les numéros (méthode qui fonctionne)
+                spans = soup.find_all('span')
+                numbers_found = []
+                
+                for span in spans:
+                    text = span.get_text().strip()
+                    if text.isdigit() and 1 <= int(text) <= 49:
+                        numbers_found.append(text)
+                
+                _LOGGER.debug(f"Validation: {len(numbers_found)} numéros trouvés")
+                
+                # Vérifier qu'on a au moins 6 numéros (5 boules + 1 chance)
+                if len(numbers_found) < 6:
+                    _LOGGER.error("Pas assez de numéros trouvés lors de la validation")
                     raise InvalidData
                     
     except aiohttp.ClientError as err:
         _LOGGER.error("Erreur de connexion à FDJ: %s", err)
         raise CannotConnect from err
     except Exception as err:
-        _LOGGER.error("Erreur inattendue: %s", err)
+        _LOGGER.error("Erreur inattendue lors de la validation: %s", err)
         raise InvalidData from err
 
     return {"title": data.get("name", DEFAULT_NAME)}
-
 
 class LotoFDJConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Gestionnaire du flux de configuration pour Loto FDJ."""
@@ -120,7 +135,6 @@ class LotoFDJConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Créer le flux d'options."""
         return LotoFDJOptionsFlowHandler(config_entry)
 
-
 class LotoFDJOptionsFlowHandler(config_entries.OptionsFlow):
     """Gestionnaire du flux d'options pour Loto FDJ."""
 
@@ -163,11 +177,10 @@ class LotoFDJOptionsFlowHandler(config_entries.OptionsFlow):
             }
         )
 
-
 class CannotConnect(HomeAssistantError):
     """Erreur de connexion."""
 
-
 class InvalidData(HomeAssistantError):
     """Données invalides."""
+
 
